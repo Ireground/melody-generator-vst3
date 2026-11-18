@@ -314,7 +314,10 @@ juce::File MelodyProcessor::writeMidiFile()
 
 void MelodyProcessor::getStateInformation (juce::MemoryBlock& destData)
 {
-    if (auto xml = apvts.copyState().createXml())
+    auto state = apvts.copyState();
+    state.setProperty ("editorW", editorW.load(), nullptr);
+    state.setProperty ("editorH", editorH.load(), nullptr);
+    if (auto xml = state.createXml())
         copyXmlToBinary (*xml, destData);
 }
 
@@ -322,7 +325,12 @@ void MelodyProcessor::setStateInformation (const void* data, int sizeInBytes)
 {
     if (auto xml = getXmlFromBinary (data, sizeInBytes))
         if (xml->hasTagName (apvts.state.getType()))
-            apvts.replaceState (juce::ValueTree::fromXml (*xml));
+        {
+            auto t = juce::ValueTree::fromXml (*xml);
+            editorW = juce::jlimit (640, 1600, (int) t.getProperty ("editorW", 780));
+            editorH = juce::jlimit (420, 1000, (int) t.getProperty ("editorH", 480));
+            apvts.replaceState (t);
+        }
 }
 
 juce::AudioProcessorEditor* MelodyProcessor::createEditor()

@@ -85,6 +85,7 @@ private:
     PianoRoll roll;
     std::unique_ptr<juce::FileChooser> chooser;
     juce::String lastInfo;
+    bool sizeReady = false;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (MelodyEditor)
 };

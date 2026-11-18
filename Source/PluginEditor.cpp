@@ -244,7 +244,8 @@ MelodyEditor::MelodyEditor (MelodyProcessor& p)
 
     setResizable (true, true);
     setResizeLimits (640, 420, 1600, 1000);
-    setSize (780, 480);
+    setSize (processor.editorW.load(), processor.editorH.load());   // remembered size
+    sizeReady = true;
     startTimerHz (30);
 }
 
@@ -261,6 +262,7 @@ void MelodyEditor::paint (juce::Graphics& g)
 
 void MelodyEditor::resized()
 {
+    if (sizeReady) { processor.editorW = getWidth(); processor.editorH = getHeight(); }
     auto r = getLocalBounds().reduced (12);
 
     auto top = r.removeFromTop (40);

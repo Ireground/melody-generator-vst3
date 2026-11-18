@@ -36,6 +36,7 @@ public:
 
     static juce::AudioProcessorValueTreeState::ParameterLayout createLayout();
     juce::AudioProcessorValueTreeState apvts;
+    std::atomic<int> editorW { 780 }, editorH { 480 };   // remembered window size
 
     // --- used by the editor ---
     MelodyPattern getPattern();               // up-to-date copy of the current melody
